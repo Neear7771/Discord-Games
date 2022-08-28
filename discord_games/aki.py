@@ -13,7 +13,6 @@ from akinator import (
     Answer,
 )
 
-from .utils import DiscordColor, DEFAULT_COLOR
 
 BACK = "◀️"
 STOP = "⏹️"
