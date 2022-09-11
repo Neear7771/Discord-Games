@@ -4,23 +4,24 @@ from typing import Optional, ClassVar
 
 import discord
 from discord.ext import commands
-from akinator import Answer, CantGoBackAnyFurther
+from akinator import Theme, Language, Answer, CantGoBackAnyFurther
 
 from ..aki import Akinator
 from ..utils import DiscordColor, DEFAULT_COLOR, BaseView
 
-class AkiButton(discord.ui.Button['AkiView']):
 
+class AkiButton(discord.ui.Button["AkiView"]):
     async def callback(self, interaction: discord.Interaction) -> None:
         return await self.view.process_input(interaction, self.label.lower())
 
+
 class AkiView(BaseView):
     OPTIONS: ClassVar[dict[str, discord.ButtonStyle]] = {
-        'yes': discord.ButtonStyle.green,
-        'no': discord.ButtonStyle.red,
-        'idk': discord.ButtonStyle.blurple,
-        'probably': discord.ButtonStyle.gray,
-        'probably not': discord.ButtonStyle.gray,
+        "yes": discord.ButtonStyle.green,
+        "no": discord.ButtonStyle.red,
+        "idk": discord.ButtonStyle.blurple,
+        "probably": discord.ButtonStyle.gray,
+        "probably not": discord.ButtonStyle.gray,
     }
 
     def __init__(self, game: BetaAkinator, *, timeout: float) -> None:
@@ -33,26 +34,22 @@ class AkiView(BaseView):
             self.add_item(AkiButton(label=label, style=style))
 
         if self.game.back_button:
-            delete = AkiButton(
-                label='back',
-                style=discord.ButtonStyle.red,
-                row=1
-            )
+            delete = AkiButton(label="back", style=discord.ButtonStyle.red, row=1)
             self.add_item(delete)
 
         if self.game.delete_button:
-            delete = AkiButton(
-                label='Cancel',
-                style=discord.ButtonStyle.red,
-                row=1
-            )
+            delete = AkiButton(label="Cancel", style=discord.ButtonStyle.red, row=1)
             self.add_item(delete)
 
-    async def process_input(self, interaction: discord.Interaction, answer: str) -> None:
+    async def process_input(
+        self, interaction: discord.Interaction, answer: str
+    ) -> None:
         game = self.game
 
         if interaction.user != game.player:
-            return await interaction.response.send_message(content="This isn't your game", ephemeral=True)
+            return await interaction.response.send_message(
+                content="This isn't your game", ephemeral=True
+            )
 
         if answer == "cancel":
             await interaction.message.reply("Session ended", mention_author=True)
@@ -64,7 +61,9 @@ class AkiView(BaseView):
                 await game.aki.back()
                 embed = game.build_embed(instructions=False)
             except CantGoBackAnyFurther:
-                return await interaction.response.send_message('I cant go back any further!', ephemeral=True)
+                return await interaction.response.send_message(
+                    "I cant go back any further!", ephemeral=True
+                )
         else:
             await game.aki.answer(Answer.from_str(answer))
 
@@ -79,10 +78,12 @@ class AkiView(BaseView):
         except discord.NotFound:
             pass
 
+
 class BetaAkinator(Akinator):
     """
     Akinator(buttons) Game
     """
+
     async def start(
         self,
         ctx: commands.Context[commands.Bot],
@@ -92,6 +93,8 @@ class BetaAkinator(Akinator):
         embed_color: DiscordColor = DEFAULT_COLOR,
         win_at: int = 80,
         timeout: Optional[float] = None,
+        aki_theme: str = "Characters",
+        aki_language: str = "English",
         child_mode: bool = True,
     ) -> discord.Message:
         """
@@ -127,6 +130,8 @@ class BetaAkinator(Akinator):
         self.win_at = win_at
         self.view = AkiView(self, timeout=timeout)
 
+        self.aki.theme = Theme.from_str(aki_theme)
+        self.aki.language = Language.from_str(aki_language)
         self.aki.child_mode = child_mode
         await self.aki.start_game()
 

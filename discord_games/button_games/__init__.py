@@ -1,5 +1,4 @@
-"""
-This folder contains games that require discord.py v2.0.0 + to be used
+"""This folder contains games that require discord.py v2.0.0 + to be used
 they utilize UI components such as buttons.
 """
 from __future__ import annotations
@@ -22,19 +21,19 @@ from .connect_four_buttons import BetaConnectFour
 
 
 __all__: tuple[str, ...] = (
-    'BetaConnectFour',
-    'BetaAkinator',
-    'BetaTwenty48',
-    'BetaWordle',
-    'BetaTictactoe',
-    'MemoryGame',
-    'BetaRockPaperScissors',
-    'BetaHangman',
-    'BetaReactionGame',
-    'BetaCountryGuesser',
-    'BetaChess',
-    'BetaBattleShip',
-    'NumberSlider',
-    'LightsOut',
-    'Boggle',
+    "BetaConnectFour",
+    "BetaAkinator",
+    "BetaTwenty48",
+    "BetaWordle",
+    "BetaTictactoe",
+    "MemoryGame",
+    "BetaRockPaperScissors",
+    "BetaHangman",
+    "BetaReactionGame",
+    "BetaCountryGuesser",
+    "BetaChess",
+    "BetaBattleShip",
+    "NumberSlider",
+    "LightsOut",
+    "Boggle",
 )
