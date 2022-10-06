@@ -15,7 +15,7 @@ from akinator import (
     Theme,
 )
 
-
+from .utils import DiscordColor, DEFAULT_COLOR
 BACK = "◀️"
 STOP = "⏹️"
 
